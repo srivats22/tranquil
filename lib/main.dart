@@ -10,11 +10,14 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:url_strategy/url_strategy.dart';
 import 'common.dart';
+import 'firebase_options.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   NotificationApi.init(initSchedule: true);
-  await Firebase.initializeApp();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
   setPathUrlStrategy();
   runApp(EasyDynamicThemeWidget(child: MyApp()));
 }
