@@ -1,0 +1,23 @@
+{
+    "name": "Being-U",
+    "short_name": "Being-U",
+    "start_url": ".",
+    "display": "standalone",
+    "background_color": "#018080",
+    "theme_color": "#018080",
+    "description": "A new wellbeing app",
+    "orientation": "portrait-primary",
+    "prefer_related_applications": false,
+    "icons": [
+        {
+            "src": "icons/ic_launcher.png",
+            "sizes": "192x192",
+            "type": "image/png"
+        },
+        {
+            "src": "icons/playstore.png",
+            "sizes": "512x512",
+            "type": "image/png"
+        }
+    ]
+}
