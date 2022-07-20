@@ -1,4 +1,9 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:universal_platform/universal_platform.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+import '../common.dart';
 
 class AboutApp extends StatelessWidget {
   const AboutApp({Key? key}) : super(key: key);
@@ -42,15 +47,66 @@ class AboutApp extends StatelessWidget {
                 style: TextStyle(fontSize: 16),),
             ),
             Divider(indent: 20, endIndent: 20,),
-            OutlinedButton(
-              onPressed: (){
-                showLicensePage(context: context);
-              },
-              child: Text("License", style: TextStyle(color: Colors.white),),
-            )
+            SizedBox(height: 10,),
+            Text("Licenses", style: Theme.of(context).textTheme.headline5,),
+            SizedBox(height: 10,),
+            Visibility(
+              visible: UniversalPlatform.isIOS,
+              child: iOSBtn(context),
+            ),
+            Visibility(
+              visible: !UniversalPlatform.isIOS,
+              child: nonIOSBtn(context),
+            ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget iOSBtn(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        CupertinoButton(
+          onPressed: (){
+            showLicensePage(context: context);
+          },
+          child: Text("App License"),
+        ),
+        CupertinoButton(
+          onPressed: (){
+            if(canLaunch("$quotesLicense") != null){
+              launch("$quotesLicense");
+            }
+          },
+          child: Text("Quotes API License"),
+        ),
+      ],
+    );
+  }
+
+  Widget nonIOSBtn(BuildContext context){
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.start,
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        TextButton(
+          onPressed: (){
+            showLicensePage(context: context);
+          },
+          child: Text("App License"),
+        ),
+        TextButton(
+          onPressed: (){
+            if(canLaunch("$quotesLicense") != null){
+              launch("$quotesLicense");
+            }
+          },
+          child: Text("Quotes API License"),
+        ),
+      ],
     );
   }
 }

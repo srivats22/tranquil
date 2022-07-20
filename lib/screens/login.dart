@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
 import '../common.dart';
@@ -195,6 +196,9 @@ class _LoginState extends State<Login> {
               MaterialPageRoute(builder: (context) => AndroidNotiRequest()));
         }
         else{
+          SharedPreferences androidNotiResult =
+          await SharedPreferences.getInstance();
+          androidNotiResult.setBool("enabled", true);
           Navigator.of(context).pushReplacement(
             new MaterialPageRoute(builder: (context) => Setup(true, true)),
           );

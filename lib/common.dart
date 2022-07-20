@@ -50,8 +50,15 @@ String morningTOD = "morning";
 String afternoonTOD = "afternoon";
 String eveningTOD = "evening";
 
+// api
 String apiUrl = "https://www.boredapi.com/api/activity?type=";
+String quotesApi = "https://api.quotable.io/random";
+String quotesLicense = "https://github.com/lukePeavey/quotable/blob/master/LICENCE.md";
 
+
+// apps
+String iOSApp = "https://apps.apple.com/us/app/tranquil-wellbeing/id1612156723";
+String androidApp = "https://play.google.com/store/apps/details?id=com.srivats.being_u";
 
 Widget loader(){
   if(UniversalPlatform.isIOS){

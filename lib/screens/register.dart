@@ -167,6 +167,9 @@ class _RegisterState extends State<Register> {
             MaterialPageRoute(builder: (context) => AndroidNotiRequest()));
       }
       else{
+        SharedPreferences androidNotiResult =
+        await SharedPreferences.getInstance();
+        androidNotiResult.setBool("enabled", true);
         Navigator.of(context).pushReplacement(
           new MaterialPageRoute(builder: (context) => Setup(true, true)),
         );
