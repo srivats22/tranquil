@@ -22,7 +22,7 @@ class AboutApp extends StatelessWidget {
           children: [
             Text("About", style: Theme.of(context).textTheme.headline5,),
             SizedBox(height: 10,),
-            Text("Being-U is a new well being application. We provide small activities that help you feel better throughout the day.",
+            Text("Tranquil is a new well being application. We provide small activities that help you feel better throughout the day.",
             style: Theme.of(context).textTheme.bodyText1,),
             SizedBox(height: 10,),
             Divider(indent: 20, endIndent: 20,),

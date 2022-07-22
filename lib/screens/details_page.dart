@@ -1,6 +1,7 @@
 import 'package:being_u/common_widgets/beverage.dart';
 import 'package:being_u/screens/api_details.dart';
 import 'package:being_u/screens/details.dart';
+import 'package:being_u/screens/feed.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart' show toBeginningOfSentenceCase;
 
@@ -71,6 +72,24 @@ class _DetailsPageState extends State<DetailsPage> {
                       label: Text("Routine"),
                       labelStyle: TextStyle(color: _selectedIndex == 0 ? Colors.white : Colors.white),
                     ),
+                    ChoiceChip(
+                      onSelected: (bool value){
+                        if(value){
+                          setState(() {
+                            _selectedIndex = 1;
+                          });
+                        }
+                        else{
+                          setState(() {
+                            _selectedIndex = 1;
+                          });
+                        }
+                      },
+                      selectedColor: Color.fromRGBO(0, 128, 128, 1),
+                      selected: _selectedIndex == 1,
+                      label: Text("Feed"),
+                      labelStyle: TextStyle(color: _selectedIndex == 0 ? Colors.white : Colors.white),
+                    ),
                     Visibility(
                       visible: widget.showBeverage,
                       child: ChoiceChip(
@@ -104,6 +123,9 @@ class _DetailsPageState extends State<DetailsPage> {
                       height: MediaQuery.of(context).size.height,
                       child: Details(widget.tod),
                     );
+                  }
+                  if(_selectedIndex == 1){
+                    return Feed(widget.tod);
                   }
                   return Visibility(
                     visible: _selectedIndex == 2,

@@ -21,7 +21,7 @@ class _StartingState extends State<Starting> {
     SharedPreferences userName = await SharedPreferences.getInstance();
     if(userName.getString("name") == null && fAuth.currentUser != null){
       Navigator.of(context).pushReplacement(new MaterialPageRoute(
-          builder: (context) => Setup(true, true)));
+          builder: (context) => Setup(true)));
     }
     if(fAuth.currentUser != null){
       Navigator.of(context).pushReplacement(new MaterialPageRoute(

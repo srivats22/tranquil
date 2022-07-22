@@ -6,6 +6,7 @@ import 'package:device_info_plus/device_info_plus.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:universal_platform/universal_platform.dart';
 
@@ -26,12 +27,20 @@ class _LoginState extends State<Login> {
   String errorMsg = "";
   DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
   int androidVersion = 0;
+  bool shouldRequestAndroidNotiPermission = false;
 
   void androidInitialization() async{
-    AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-    setState((){
-      androidVersion = androidInfo.version.sdkInt!;
-    });
+    var status = await Permission.notification.status;
+    if(status.isGranted){
+      setState((){
+        shouldRequestAndroidNotiPermission = false;
+      });
+    }
+    else{
+      setState((){
+        shouldRequestAndroidNotiPermission = true;
+      });
+    }
   }
 
   @override
@@ -191,16 +200,24 @@ class _LoginState extends State<Login> {
         await fAuth.signInWithEmailAndPassword(
             email: email.text, password: pwd.text);
         Navigator.of(context).popUntil((route) => route.isFirst);
-        if(androidVersion == 33){
-          Navigator.of(context).pushReplacement(
-              MaterialPageRoute(builder: (context) => AndroidNotiRequest()));
+        // if platform is android
+        if(UniversalPlatform.isAndroid){
+          // if request permission go to request permission screen
+          if(shouldRequestAndroidNotiPermission){
+            Navigator.of(context).pushReplacement(
+                MaterialPageRoute(builder: (context) => AndroidNotiRequest()));
+          }
+          // else go to setup screen
+          else{
+            Navigator.of(context).pushReplacement(
+              new MaterialPageRoute(builder: (context) => Setup(true)),
+            );
+          }
         }
-        else{
-          SharedPreferences androidNotiResult =
-          await SharedPreferences.getInstance();
-          androidNotiResult.setBool("enabled", true);
+        // if platform is iOS directly go to setup screen
+        if(UniversalPlatform.isIOS || UniversalPlatform.isWeb){
           Navigator.of(context).pushReplacement(
-            new MaterialPageRoute(builder: (context) => Setup(true, true)),
+            new MaterialPageRoute(builder: (context) => Setup(true)),
           );
         }
       }

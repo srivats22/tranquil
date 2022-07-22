@@ -14,6 +14,8 @@ class AndroidNotiRequest extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.all(20),
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 Icon(Icons.notifications,
                   size: 50,),
@@ -32,7 +34,7 @@ class AndroidNotiRequest extends StatelessWidget {
                         androidNotiResult.setBool("enabled", false);
                         Navigator.of(context).pushReplacement(
                             MaterialPageRoute(
-                                builder: (context) => Setup(true, false)
+                                builder: (context) => Setup(true)
                             )
                         );
                       },
@@ -43,22 +45,11 @@ class AndroidNotiRequest extends StatelessWidget {
                         var result = await Permission.notification.request();
                         SharedPreferences androidNotiResult =
                         await SharedPreferences.getInstance();
-                        if(result.isGranted){
-                          androidNotiResult.setBool("enabled", true);
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => Setup(true, true)
-                              )
-                          );
-                        }
-                        if(result.isDenied){
-                          androidNotiResult.setBool("enabled", false);
-                          Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(
-                                  builder: (context) => Setup(true, false)
-                              )
-                          );
-                        }
+                        Navigator.of(context).pushReplacement(
+                            MaterialPageRoute(
+                                builder: (context) => Setup(true)
+                            )
+                        );
                       },
                       child: Text("Enable Notifications"),
                     ),

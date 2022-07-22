@@ -19,6 +19,7 @@ class _AddActivityState extends State<AddActivity> {
   bool isInstructionSeen = false;
   bool isError = false;
   bool isLoading = true;
+  bool isShowNameSelected = true;
 
   void initializer() async {
     SharedPreferences instructionSeen = await SharedPreferences.getInstance();
@@ -219,6 +220,44 @@ class _AddActivityState extends State<AddActivity> {
           ],
         ),
         SizedBox(height: 10,),
+        Text("Display your name?"),
+        SizedBox(height: 10,),
+        Wrap(
+          alignment: WrapAlignment.start,
+          spacing: 5,
+          runSpacing: 5,
+          children: [
+            ChoiceChip(
+              onSelected: (bool value) {
+                if (value) {
+                  setState(() {
+                    isShowNameSelected = value;
+                  });
+                }
+              },
+              selectedColor: Color.fromRGBO(0, 128, 128, 1),
+              selected: isShowNameSelected,
+              label: Text("Yes"),
+              labelStyle: TextStyle(
+                  color: isShowNameSelected ? Colors.white : Colors.white),
+            ),
+            ChoiceChip(
+              onSelected: (bool value) {
+                if (value) {
+                  setState(() {
+                    isShowNameSelected = !value;
+                  });
+                }
+              },
+              selectedColor: Color.fromRGBO(0, 128, 128, 1),
+              selected: !isShowNameSelected,
+              label: Text("No"),
+              labelStyle: TextStyle(
+                  color: !isShowNameSelected ? Colors.white : Colors.white),
+            ),
+          ],
+        ),
+        SizedBox(height: 10,),
         Visibility(
           visible: isError,
           child: Text("Name and Description cannot be empty",
@@ -231,7 +270,7 @@ class _AddActivityState extends State<AddActivity> {
             onPressed: (){
               submitFunc();
               final snackBar = SnackBar(
-                content: isError ? Text("An Error Occurred",
+                content: isError ? Text("Name and Description are required",
                   style: TextStyle(color: Colors.white),)
                     : Text("Success"),
                 backgroundColor: isError ? Colors.red : Colors.white,
@@ -247,7 +286,7 @@ class _AddActivityState extends State<AddActivity> {
             onPressed: (){
               submitFunc();
               final snackBar = SnackBar(
-                content: isError ? Text("An Error Occurred",
+                content: isError ? Text("Name and Description are required",
                     style: TextStyle(color: Colors.white))
                     : Text("Success"),
                 backgroundColor: isError ? Colors.red : Colors.white,
@@ -270,12 +309,14 @@ class _AddActivityState extends State<AddActivity> {
     }
     else{
       fStore.collection("content").add({
-        "details": _taskDescription!.text,
+        "detail": _taskDescription!.text,
         "imgAsset": "",
         "reference": _taskReference!.text,
         "timeOfDay": tod,
         "title": _taskName!.text,
         "uid": user?.uid,
+        "name": user?.displayName,
+        "displayName": isShowNameSelected,
       }).whenComplete(() => {
         _taskName?.clear(),
         _taskReference?.clear(),

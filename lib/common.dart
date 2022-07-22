@@ -13,6 +13,7 @@ FirebaseAuth fAuth = FirebaseAuth.instance;
 
 bool isIos = UniversalPlatform.isIOS;
 bool isAndroid = UniversalPlatform.isAndroid;
+bool isMobile = UniversalPlatform.isIOS || UniversalPlatform.isAndroid;
 bool isMobileWeb = kIsWeb &&
     (defaultTargetPlatform == TargetPlatform.iOS ||
         defaultTargetPlatform == TargetPlatform.android);

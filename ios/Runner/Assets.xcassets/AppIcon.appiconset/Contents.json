@@ -55,16 +55,10 @@
       "size" : "60x60"
     },
     {
+      "filename" : "appstore-1.png",
       "idiom" : "ios-marketing",
       "scale" : "1x",
       "size" : "1024x1024"
-    },
-    {
-      "filename" : "appstore.png",
-      "idiom" : "ios-marketing",
-      "scale" : "1x",
-      "size" : "1024x1024",
-      "unassigned" : true
     }
   ],
   "info" : {

@@ -70,7 +70,7 @@ class Landing extends StatelessWidget {
                             onPressed: (){
                               Navigator.push(context,
                                   PageTransition(
-                                      child: Login(),
+                                      child: Register(),
                                       type: PageTransitionType.bottomToTop)
                               );
                             },

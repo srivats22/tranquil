@@ -14,8 +14,8 @@ import 'package:universal_platform/universal_platform.dart';
 import '../common.dart';
 
 class Setup extends StatefulWidget {
-  final bool showNameField, showNotiField;
-  Setup(this.showNameField, this.showNotiField);
+  final bool showNameField;
+  Setup(this.showNameField);
   @override
   _SetupState createState() => _SetupState();
 }
@@ -46,19 +46,30 @@ class _SetupState extends State<Setup> {
   bool isNotiPermissionGranted = false;
 
   void initialization() async{
-    bool? result = await FlutterLocalNotificationsPlugin()
-        .resolvePlatformSpecificImplementation<
-        IOSFlutterLocalNotificationsPlugin>()
-        ?.requestPermissions(
-      alert: true,
-      badge: true,
-      sound: true,
-    );
-    if(mounted){
-      setState(() {
-        isNotiPermissionGranted = result!;
-        isLoading = false;
-      });
+    if(UniversalPlatform.isIOS){
+      bool? result = await FlutterLocalNotificationsPlugin()
+          .resolvePlatformSpecificImplementation<
+          IOSFlutterLocalNotificationsPlugin>()
+          ?.requestPermissions(
+        alert: true,
+        badge: true,
+        sound: true,
+      );
+      if(mounted){
+        setState(() {
+          isNotiPermissionGranted = result!;
+          isLoading = false;
+        });
+      }
+    }
+    if(UniversalPlatform.isAndroid){
+      var status = await Permission.notification.status;
+      if(status.isGranted){
+        setState((){
+          isNotiPermissionGranted = true;
+          isLoading = false;
+        });
+      }
     }
   }
 
@@ -67,7 +78,7 @@ class _SetupState extends State<Setup> {
     super.initState();
     user = fAuth.currentUser;
     name = new TextEditingController();
-    if(UniversalPlatform.isIOS){
+    if(UniversalPlatform.isIOS || UniversalPlatform.isAndroid){
       initialization();
     }
     isLoading = false;
@@ -166,13 +177,9 @@ class _SetupState extends State<Setup> {
               child: CustomTextField(name!, "Name", "", "", false,
                   TextInputType.name, false, false),
             ),
-            Visibility(
-              visible: UniversalPlatform.isIOS && isNotiPermissionGranted,
-              child: selectNotiTime(),
-            ),
             SizedBox(height: 15,),
             Visibility(
-              visible: UniversalPlatform.isAndroid && widget.showNotiField,
+              visible: isMobile && isNotiPermissionGranted,
               child: selectNotiTime(),
             ),
             SizedBox(height: 15,),

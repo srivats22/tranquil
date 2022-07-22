@@ -31,9 +31,19 @@ class _HomeState extends State<Home> {
 
   void initialization() async{
     SharedPreferences userName = await SharedPreferences.getInstance();
-    setState(() {
-      name = userName.getString("name");
-    });
+    if (userName.getString("name") == null ||
+        userName.getString("name") == "") {
+      List<String>? emailName = user!.email?.split("@");
+      setState(() {
+        name = emailName![0];
+        isLoading = false;
+      });
+    } else {
+      setState(() {
+        name = userName.getString("name");
+        isLoading = false;
+      });
+    }
     // current time
     setState(() {
       currTime = DateFormat('hh:mm a').format(DateTime.now());

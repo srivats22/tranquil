@@ -155,6 +155,7 @@ class _UpdateNotiState extends State<UpdateNoti> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: isLoading
             ? Center(
                 child: CircularProgressIndicator(),
@@ -173,27 +174,6 @@ class _UpdateNotiState extends State<UpdateNoti> {
       if (isNotiPermissionGranted || isAndroidNotiGranted) {
         return Column(
           children: [
-            Row(
-              children: [
-                Text(
-                  "Update Notification",
-                  style: Theme.of(context).textTheme.headline5,
-                ),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      onPressed: () {
-                        Navigator.of(context).pop();
-                      },
-                      icon: UniversalPlatform.isIOS
-                          ? Icon(CupertinoIcons.clear)
-                          : Icon(Icons.close),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             Text(
               "Which notification time do you want to change?",
               style: Theme.of(context).textTheme.headline6,

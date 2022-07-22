@@ -36,22 +36,22 @@ class _NaviState extends State<Navi> {
   ];
 
   void initializer() async{
-    var hr = DateTime.now().hour;
-    if(hr < 12){
-      setState(() {
-        _webPageIndex = 0;
-      });
-    }
-    else if(hr >= 12 && hr < 16){
-      setState(() {
-        _webPageIndex = 1;
-      });
-    }
-    else{
-      setState(() {
-        _webPageIndex = 2;
-      });
-    }
+    // var hr = DateTime.now().hour;
+    // if(hr < 12){
+    //   setState(() {
+    //     _webPageIndex = 0;
+    //   });
+    // }
+    // else if(hr >= 12 && hr < 16){
+    //   setState(() {
+    //     _webPageIndex = 1;
+    //   });
+    // }
+    // else{
+    //   setState(() {
+    //     _webPageIndex = 2;
+    //   });
+    // }
   }
 
   @override
