@@ -1,9 +1,10 @@
 import 'dart:convert';
 
+import 'package:being_u/common.dart';
 import 'package:http/http.dart' as http;
 
 Future<QuoteApiResponse> quoteData() async{
-  final response = await http.get(Uri.parse("https://api.quotable.io/random"));
+  final response = await http.get(Uri.parse("$quotesApi"));
   if(response.statusCode == 200){
     return QuoteApiResponse.fromJson(jsonDecode(response.body));
   }

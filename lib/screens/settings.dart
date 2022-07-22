@@ -153,20 +153,26 @@ class _SettingsState extends State<Settings> {
               ),
             ),
             Visibility(
-              visible: UniversalPlatform.isAndroid,
+              visible: UniversalPlatform.isAndroid || UniversalPlatform.isIOS,
               child: Divider(
                 indent: 20,
                 endIndent: 20,
               ),
             ),
             Visibility(
-              visible: UniversalPlatform.isAndroid,
+              visible: UniversalPlatform.isAndroid || UniversalPlatform.isIOS,
               child: Card(
                 child: ListTile(
                   onTap: (){
-                    Share.share("Check out this app: https://play.google.com/store/apps/details?id=com.srivats.being_u");
+                    if(UniversalPlatform.isIOS){
+                      Share.share("Check out this app: $iOSApp");
+                    }
+                    else{
+                      Share.share("Check out this app: $androidApp");
+                    }
                   },
-                  leading: Icon(Icons.share),
+                  leading: UniversalPlatform.isIOS ? Icon(CupertinoIcons.share)
+                      : Icon(Icons.share),
                   title: Text("Share the app",
                     style: Theme.of(context).textTheme.bodyText1,),
                   subtitle: Text("Help spread the word",

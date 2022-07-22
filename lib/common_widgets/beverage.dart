@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:being_u/common.dart';
 import 'package:paginate_firestore/paginate_firestore.dart';
+import 'package:universal_platform/universal_platform.dart';
 
 class Beverage extends StatefulWidget {
   final String? tod;
@@ -135,11 +137,23 @@ class _BeverageState extends State<Beverage> {
               style: Theme.of(context).textTheme.bodyText1?.copyWith(color: Colors.white),
               textAlign: TextAlign.center, ),
           ),
-          OutlinedButton(
-            onPressed: (){
-              Navigator.of(context).pop();
-            },
-            child: Text("Close"),
+          Visibility(
+            visible: !UniversalPlatform.isIOS,
+            child: OutlinedButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+            ),
+          ),
+          Visibility(
+            visible: UniversalPlatform.isIOS,
+            child: CupertinoButton(
+              onPressed: (){
+                Navigator.of(context).pop();
+              },
+              child: Text("Close"),
+            ),
           ),
         ],
       ),

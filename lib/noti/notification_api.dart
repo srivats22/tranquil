@@ -26,8 +26,8 @@ class NotificationApi {
   // initialize the notifications library
   static Future init({bool initSchedule = false}) async {
     final android = AndroidInitializationSettings("@mipmap/ic_launcher");
-    final iOS = IOSInitializationSettings(requestAlertPermission: true,
-        requestBadgePermission: true, requestSoundPermission: true);
+    final iOS = IOSInitializationSettings(requestAlertPermission: false,
+        requestBadgePermission: false, requestSoundPermission: false);
     final settings = InitializationSettings(
       android: android,
       iOS: iOS,

@@ -36,21 +36,4 @@ class MyApp extends StatelessWidget {
       home: Starting(),
     );
   }
-
-  // Widget starting() {
-  //   return StreamBuilder<User?>(
-  //     stream: fAuth.authStateChanges(),
-  //     builder: (context, snapshot) {
-  //       if (snapshot.hasData) {
-  //         if (snapshot.data!.providerData.length == 1) {
-  //           return Home();
-  //         } else {
-  //           return Home();
-  //         }
-  //       } else {
-  //         return Landing();
-  //       }
-  //     },
-  //   );
-  // }
 }

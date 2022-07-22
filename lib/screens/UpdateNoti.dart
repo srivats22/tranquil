@@ -24,23 +24,29 @@ class _UpdateNotiState extends State<UpdateNoti> {
   bool isNotiPermissionGranted = false;
   bool isAndroidNotiGranted = false;
 
-  void init() async{
-    if(UniversalPlatform.isAndroid){
-      SharedPreferences androidNotiResult =
-      await SharedPreferences.getInstance();
-      setState((){
-        isAndroidNotiGranted = androidNotiResult.getBool("enabled")!;
-      });
+  void init() async {
+    if (UniversalPlatform.isAndroid) {
+      var status = await Permission.notification.status;
+      if(status.isGranted){
+        setState((){
+          isAndroidNotiGranted = true;
+        });
+      }
+      // SharedPreferences androidNotiResult =
+      //     await SharedPreferences.getInstance();
+      // setState(() {
+      //   isAndroidNotiGranted = androidNotiResult.getBool("enabled")!;
+      // });
     }
-    if(UniversalPlatform.isIOS){
+    if (UniversalPlatform.isIOS) {
       bool? result = await FlutterLocalNotificationsPlugin()
           .resolvePlatformSpecificImplementation<
-          IOSFlutterLocalNotificationsPlugin>()
+              IOSFlutterLocalNotificationsPlugin>()
           ?.requestPermissions(
-        alert: true,
-        badge: true,
-        sound: true,
-      );
+            alert: true,
+            badge: true,
+            sound: true,
+          );
       setState(() {
         isNotiPermissionGranted = result!;
       });
@@ -56,16 +62,15 @@ class _UpdateNotiState extends State<UpdateNoti> {
     int? mornMin = morningMin.getInt("mMin");
     int? evenHr = eveningHr.getInt("eHr");
     int? evenMin = eveningMin.getInt("eMin");
-    if(mornHr == null &&
+    if (mornHr == null &&
         mornMin == null &&
         evenHr == null &&
-        evenMin == null){
+        evenMin == null) {
       setState(() {
         isSetup = true;
         isLoading = false;
       });
-    }
-    else{
+    } else {
       if (UniversalPlatform.isIOS) {
         setState(() {
           _morningTime = new DateTime(DateTime.now().year, DateTime.now().month,
@@ -112,80 +117,63 @@ class _UpdateNotiState extends State<UpdateNoti> {
     showCupertinoModalPopup<void>(
         context: context,
         builder: (BuildContext context) => Container(
-          color: Colors.white,
-          height: 216,
-          padding: const EdgeInsets.only(top: 6.0),
-          // The Bottom margin is provided to align the popup above the system navigation bar.
-          margin: EdgeInsets.only(
-            bottom: MediaQuery.of(context).viewInsets.bottom,
-          ),
-          // Provide a background color for the popup.
-          // Use a SafeArea widget to avoid system overlaps.
-          child: SafeArea(
-            top: false,
-            child: CupertinoDatePicker(
-              // backgroundColor: CupertinoColors.white,
-              initialDateTime:
-              tod == "morning" ? _morningTime : _eveningTime,
-              mode: CupertinoDatePickerMode.time,
-              use24hFormat: false,
-              // This is called when the user changes the date.
-              onDateTimeChanged: (DateTime newDate) {
-                if (tod == "morning") {
-                  setState(() {
-                    _morningTime = newDate;
-                  });
-                } else {
-                  setState(() {
-                    _eveningTime = newDate;
-                  });
-                }
-              },
-            ),
-          ),
-        ));
+              color: Colors.white,
+              height: 216,
+              padding: const EdgeInsets.only(top: 6.0),
+              // The Bottom margin is provided to align the popup above the system navigation bar.
+              margin: EdgeInsets.only(
+                bottom: MediaQuery.of(context).viewInsets.bottom,
+              ),
+              // Provide a background color for the popup.
+              // Use a SafeArea widget to avoid system overlaps.
+              child: SafeArea(
+                top: false,
+                child: CupertinoDatePicker(
+                  // backgroundColor: CupertinoColors.white,
+                  initialDateTime:
+                      tod == "morning" ? _morningTime : _eveningTime,
+                  mode: CupertinoDatePickerMode.time,
+                  use24hFormat: false,
+                  // This is called when the user changes the date.
+                  onDateTimeChanged: (DateTime newDate) {
+                    if (tod == "morning") {
+                      setState(() {
+                        _morningTime = newDate;
+                      });
+                    } else {
+                      setState(() {
+                        _eveningTime = newDate;
+                      });
+                    }
+                  },
+                ),
+              ),
+            ));
   }
 
   @override
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        appBar: AppBar(),
         body: isLoading
             ? Center(
-          child: CircularProgressIndicator(),
-        )
+                child: CircularProgressIndicator(),
+              )
             : Padding(
-          padding: EdgeInsets.all(10),
-          child: uiBasedOnNoti(),
-        ),
+                padding: EdgeInsets.all(10),
+                child: uiBasedOnNoti(),
+              ),
       ),
     );
   }
 
-  Widget uiBasedOnNoti(){
-    if(UniversalPlatform.isIOS || UniversalPlatform.isAndroid){
-      if(isNotiPermissionGranted || isAndroidNotiGranted){
+  Widget uiBasedOnNoti() {
+    // notification permission granted
+    if (UniversalPlatform.isIOS || UniversalPlatform.isAndroid) {
+      if (isNotiPermissionGranted || isAndroidNotiGranted) {
         return Column(
           children: [
-            Row(
-              children: [
-                Text("Update Notification",
-                  style: Theme.of(context).textTheme.headline5,),
-                Expanded(
-                  child: Align(
-                    alignment: Alignment.topRight,
-                    child: IconButton(
-                      onPressed: (){
-                        Navigator.of(context).pop();
-                      },
-                      icon: UniversalPlatform.isIOS ?
-                      Icon(CupertinoIcons.clear)
-                          : Icon(Icons.close),
-                    ),
-                  ),
-                ),
-              ],
-            ),
             Text(
               "Which notification time do you want to change?",
               style: Theme.of(context).textTheme.headline6,
@@ -201,17 +189,17 @@ class _UpdateNotiState extends State<UpdateNoti> {
                   onPressed: () async {
                     // save morning notification hr and min to shared preferences
                     SharedPreferences morningHr =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await morningHr.setInt("mHr", _morningTime.hour);
                     SharedPreferences morningMin =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await morningMin.setInt("mMin", _morningTime.minute);
                     // save evening notification hr and min to shared preferences
                     SharedPreferences eveningHr =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await eveningHr.setInt("eHr", _eveningTime.hour);
                     SharedPreferences eveningMin =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await eveningMin.setInt("eMin", _eveningTime.minute);
                     // called notification schedule method
                     NotificationApi.scheduleMorningNoti(
@@ -241,17 +229,17 @@ class _UpdateNotiState extends State<UpdateNoti> {
                   onPressed: () async {
                     // save morning notification hr and min to shared preferences
                     SharedPreferences morningHr =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await morningHr.setInt("mHr", _morning.hour);
                     SharedPreferences morningMin =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await morningMin.setInt("mMin", _morning.minute);
                     // save evening notification hr and min to shared preferences
                     SharedPreferences eveningHr =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await eveningHr.setInt("eHr", _evening.hour);
                     SharedPreferences eveningMin =
-                    await SharedPreferences.getInstance();
+                        await SharedPreferences.getInstance();
                     await eveningMin.setInt("eMin", _evening.minute);
                     // called notification schedule method
                     NotificationApi.scheduleMorningNoti(
@@ -275,133 +263,47 @@ class _UpdateNotiState extends State<UpdateNoti> {
           ],
         );
       }
-      return Center(
-        child: Column(
-          children: [
-            Text("Notification Permission has not been granted"),
-            Text("Follow these steps: "),
-            Text("1. Close the current page"),
-            Text("2. Open Device settings and choose Being-U"),
-            Text("3. Enable Notifications"),
-            CupertinoButton.filled(
-              onPressed: (){
-                Navigator.of(context).pop();
-                AppSettings.openAppSettings();
-              },
-              child: Text("Open Settings"),
-            ),
-          ],
-        ),
-      );
     }
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text("Update Notification",
-              style: Theme.of(context).textTheme.headline5,),
-            Expanded(
-              child: Align(
-                alignment: Alignment.topRight,
-                child: IconButton(
-                  onPressed: (){
-                    Navigator.of(context).pop();
-                  },
-                  icon: UniversalPlatform.isIOS ?
-                  Icon(CupertinoIcons.clear)
-                      : Icon(Icons.close),
-                ),
-              ),
+    // notification permission not granted
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Visibility(
+            visible: UniversalPlatform.isIOS,
+            child: Icon(CupertinoIcons.bell_slash_fill,
+            size: 50,),
+          ),
+          Visibility(
+            visible: UniversalPlatform.isAndroid,
+            child: Icon(Icons.notifications_off,
+            size: 50,),
+          ),
+          Text("Notifications are disabled",
+          style: Theme.of(context).textTheme.headline5,),
+          Visibility(
+            visible: UniversalPlatform.isAndroid,
+            child: ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                AppSettings.openNotificationSettings();
+              },
+              child: Text("Enabled Notifications"),
             ),
-          ],
-        ),
-        Text(
-          "Which notification time do you want to change?",
-          style: Theme.of(context).textTheme.headline6,
-        ),
-        SizedBox(
-          height: 5,
-        ),
-        selectNotiTime(),
-        Visibility(
-          visible: UniversalPlatform.isIOS,
-          child: CupertinoButton(
-              color: Colors.teal,
-              onPressed: () async {
-                // save morning notification hr and min to shared preferences
-                SharedPreferences morningHr =
-                await SharedPreferences.getInstance();
-                await morningHr.setInt("mHr", _morningTime.hour);
-                SharedPreferences morningMin =
-                await SharedPreferences.getInstance();
-                await morningMin.setInt("mMin", _morningTime.minute);
-                // save evening notification hr and min to shared preferences
-                SharedPreferences eveningHr =
-                await SharedPreferences.getInstance();
-                await eveningHr.setInt("eHr", _eveningTime.hour);
-                SharedPreferences eveningMin =
-                await SharedPreferences.getInstance();
-                await eveningMin.setInt("eMin", _eveningTime.minute);
-                // called notification schedule method
-                NotificationApi.scheduleMorningNoti(
-                  title: "Good Morning!",
-                  body: "Ready for some productivity exercises?",
-                  payLoad: "morning",
-                  hr: _morningTime.hour,
-                  min: _morningTime.minute,
-                );
-                NotificationApi.scheduleEveningNoti(
-                  title: "Good Evening!",
-                  body: "Looking for tips to unwind from the day?",
-                  payLoad: "evening",
-                  hr: _eveningTime.hour,
-                  min: _eveningTime.minute,
-                );
+          ),
+          Visibility(
+            visible: UniversalPlatform.isIOS,
+            child: CupertinoButton.filled(
+              onPressed: () {
                 Navigator.of(context).pop();
+                AppSettings.openNotificationSettings();
               },
-              child: Text("Save")),
-        ),
-        Visibility(
-          visible: UniversalPlatform.isAndroid,
-          child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                primary: Colors.teal,
-              ),
-              onPressed: () async {
-                // save morning notification hr and min to shared preferences
-                SharedPreferences morningHr =
-                await SharedPreferences.getInstance();
-                await morningHr.setInt("mHr", _morning.hour);
-                SharedPreferences morningMin =
-                await SharedPreferences.getInstance();
-                await morningMin.setInt("mMin", _morning.minute);
-                // save evening notification hr and min to shared preferences
-                SharedPreferences eveningHr =
-                await SharedPreferences.getInstance();
-                await eveningHr.setInt("eHr", _evening.hour);
-                SharedPreferences eveningMin =
-                await SharedPreferences.getInstance();
-                await eveningMin.setInt("eMin", _evening.minute);
-                // called notification schedule method
-                NotificationApi.scheduleMorningNoti(
-                  title: "Good Morning!",
-                  body: "Ready for some productivity exercises?",
-                  payLoad: "morning",
-                  hr: _morning.hour,
-                  min: _morning.minute,
-                );
-                NotificationApi.scheduleEveningNoti(
-                  title: "Good Evening!",
-                  body: "Looking for tips to unwind from the day?",
-                  payLoad: "evening",
-                  hr: _evening.hour,
-                  min: _evening.minute,
-                );
-                Navigator.of(context).pop();
-              },
-              child: Text("Save")),
-        ),
-      ],
+              child: Text("Enabled Notifications"),
+            ),
+          ),
+        ],
+      ),
     );
   }
 
